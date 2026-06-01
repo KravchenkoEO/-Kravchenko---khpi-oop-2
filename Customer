@@ -1,0 +1,42 @@
+package ua.khpi.oop.lab01;
+
+import java.util.Objects;
+
+public class Customer {
+    private String customerId;
+    private String name;
+    private String phone;
+
+    public Customer() {
+        this.customerId = "unknown";
+        this.name = "unknown";
+        this.phone = "unknown";
+    }
+
+    public Customer(String customerId, String name, String phone) {
+        this.customerId = customerId;
+        this.name = name;
+        this.phone = phone;
+    }
+
+    // геттери/сеттери (додай сам за зразком вище)
+
+    @Override
+    public String toString() {
+        return String.format("Customer[ID=%s, name=%s, phone=%s]",
+                customerId, name, phone);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Customer)) return false;
+        Customer other = (Customer) obj;
+        return Objects.equals(customerId, other.customerId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(customerId);
+    }
+}
