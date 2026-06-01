@@ -1,0 +1,42 @@
+package ua.khpi.oop.lab01;
+
+import java.util.Objects;
+
+public class Barista {
+    private String baristaId;
+    private String name;
+    private int yearsOfExperience;
+
+    public Barista() {
+        this.baristaId = "unknown";
+        this.name = "unknown";
+        this.yearsOfExperience = 0;
+    }
+
+    public Barista(String baristaId, String name, int yearsOfExperience) {
+        this.baristaId = baristaId;
+        this.name = name;
+        this.yearsOfExperience = yearsOfExperience;
+    }
+
+    // геттери/сеттери (додай)
+
+    @Override
+    public String toString() {
+        return String.format("Barista[ID=%s, name=%s, exp=%d years]",
+                baristaId, name, yearsOfExperience);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Barista)) return false;
+        Barista other = (Barista) obj;
+        return Objects.equals(baristaId, other.baristaId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(baristaId);
+    }
+}

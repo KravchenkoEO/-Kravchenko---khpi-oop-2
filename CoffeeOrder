@@ -1,0 +1,52 @@
+package ua.khpi.oop.lab01;
+
+import java.util.Objects;
+
+public class CoffeeOrder {
+    private String orderId;
+    private String orderTime;
+    private String status;
+
+    // Конструктор 1 (порожній)
+    public CoffeeOrder() {
+        this.orderId = "unknown";
+        this.orderTime = "unknown";
+        this.status = "pending";
+    }
+
+    // Конструктор 2 (з параметрами)
+    public CoffeeOrder(String orderId, String orderTime, String status) {
+        this.orderId = orderId;
+        this.orderTime = orderTime;
+        this.status = status;
+    }
+
+    // Геттери та сеттери (обов'язково для інкапсуляції)
+    public String getOrderId() { return orderId; }
+    public void setOrderId(String orderId) { this.orderId = orderId; }
+
+    public String getOrderTime() { return orderTime; }
+    public void setOrderTime(String orderTime) { this.orderTime = orderTime; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    @Override
+    public String toString() {
+        return String.format("CoffeeOrder[ID=%s, time=%s, status=%s]",
+                orderId, orderTime, status);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof CoffeeOrder)) return false;
+        CoffeeOrder other = (CoffeeOrder) obj;
+        return Objects.equals(orderId, other.orderId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderId);
+    }
+}

@@ -1,0 +1,45 @@
+package ua.khpi.oop.lab01;
+
+import java.util.Objects;
+
+public class MenuItem {
+    private String itemCode;
+    private String name;
+    private double price;
+    private String category;
+
+    public MenuItem() {
+        this.itemCode = "unknown";
+        this.name = "unknown";
+        this.price = 0.0;
+        this.category = "unknown";
+    }
+
+    public MenuItem(String itemCode, String name, double price, String category) {
+        this.itemCode = itemCode;
+        this.name = name;
+        this.price = price;
+        this.category = category;
+    }
+
+    // геттери/сеттери (додай)
+
+    @Override
+    public String toString() {
+        return String.format("MenuItem[code=%s, name=%s, price=%.2f, category=%s]",
+                itemCode, name, price, category);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof MenuItem)) return false;
+        MenuItem other = (MenuItem) obj;
+        return Objects.equals(itemCode, other.itemCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemCode);
+    }
+}
