@@ -1,0 +1,111 @@
+// package ua.khpi.oop.lab02;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+public class Order {
+    private final String orderId;
+    private final LocalDateTime creationTime;
+    private OrderStatus status; // PENDING, PREPARING, COMPLETED, PAID, CANCELED
+    private double totalAmount;
+    private User user; // Асоціація (може бути null, якщо клієнт анонімний)
+    private final List<OrderItem> items; // Композиція
+
+    public Order(String orderId, User user) {
+        if (orderId == null || orderId.isEmpty()) throw new IllegalArgumentException("Order ID cannot be null or empty.");
+        this.orderId = orderId;
+        this.creationTime = LocalDateTime.now();
+        this.status = OrderStatus.PENDING;
+        this.totalAmount = 0.0;
+        this.user = user;
+        this.items = new ArrayList<>();
+    }
+
+    public void addItem(MenuItem item, int quantity) {
+        Objects.requireNonNull(item, "Menu item cannot be null.");
+        if (quantity <= 0) throw new IllegalArgumentException("Quantity must be positive.");
+        if (!isModifiable()) {
+            throw new IllegalStateException("Cannot add items to order with status " + status);
+        }
+
+        OrderItem existingItem = items.stream()
+                .filter(oi -> oi.getItem().equals(item))
+                .findFirst()
+                .orElse(null);
+
+        if (existingItem != null) {
+            existingItem.addQuantity(quantity);
+        } else {
+            items.add(new OrderItem(item, quantity)); // OrderItem створюється і належить замовленню
+        }
+        calculateTotal();
+    }
+
+    public void removeItem(MenuItem item) {
+        Objects.requireNonNull(item, "Menu item cannot be null.");
+        if (!isModifiable()) {
+            throw new IllegalStateException("Cannot remove items from order with status " + status);
+        }
+        items.removeIf(orderItem -> orderItem.getItem().equals(item));
+        calculateTotal();
+    }
+
+    public double calculateTotal() {
+        this.totalAmount = items.stream().mapToDouble(OrderItem::getCost).sum();
+        return this.totalAmount;
+    }
+
+    public void updateStatus(OrderStatus newStatus) {
+        // Логіка перевірки переходів статусів (наприклад, не можна з COMPLETED в PENDING)
+        if (!isValidStatusTransition(this.status, newStatus)) {
+            throw new IllegalStateException("Invalid status transition from " + this.status + " to " + newStatus);
+        }
+        this.status = newStatus;
+    }
+
+    private boolean isValidStatusTransition(OrderStatus current, OrderStatus next) {
+        return switch (current) {
+            case PENDING -> next == OrderStatus.PREPARING || next == OrderStatus.CANCELLED;
+            case PREPARING -> next == OrderStatus.READY_FOR_PICKUP || next == OrderStatus.CANCELLED;
+            case READY_FOR_PICKUP -> next == OrderStatus.COMPLETED || next == OrderStatus.PAID || next == OrderStatus.CANCELLED;
+            case COMPLETED, PAID -> next == OrderStatus.PAID || next == OrderStatus.COMPLETED; // Можна перепризначити PAID/COMPLETED
+            case CANCELLED -> false; // Зі скасованого статусу перейти не можна
+        };
+    }
+
+    public boolean isModifiable() {
+        return this.status == OrderStatus.PENDING;
+    }
+
+    // Getters for orderId, creationTime, status, totalAmount, user, items
+
+    public String getOrderId() { return orderId; }
+    public LocalDateTime getCreationTime() { return creationTime; }
+    public OrderStatus getStatus() { return status; }
+    public double getTotalAmount() { return totalAmount; }
+    public User getUser() { return user; }
+    public List<OrderItem> getItems() { return Collections.unmodifiableList(items); }
+
+    @Override
+    public String toString() {
+        return String.format("Order[id=%s, time=%s, status=%s, total=%.2f, items=%d, user=%s]",
+                orderId, creationTime, status, totalAmount, items.size(), (user != null ? user.getUsername() : "N/A"));
+    }
+
+    // equals and hashCode based on orderId
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(orderId, order.orderId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderId);
+    }
+}

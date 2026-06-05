@@ -1,33 +1,62 @@
-package ua.khpi.oop.lab01.demo;
+// package ua.khpi.oop.lab02;
 
-import ua.khpi.oop.lab01.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Main {
     public static void main(String[] args) {
-        // Створюємо клієнта
-        Customer customer = new Customer("C001", "Іван Петренко", "+380991234567");
+        // 1. Створення кав'ярні та персоналу
+        Cafe myCafe = new Cafe("Coffee Break", "Main Street 10");
+        Barista barista = new Barista("B001", "Anna", "pass123");
+        Admin admin = new Admin("A001", "Max", "adminpass");
 
-        // Бариста
-        Barista barista = new Barista("B001", "Олена", 5);
+        // 2. Керування меню адміністратором
+        MenuItem espresso = new Beverage("BM001", "Espresso", 2.50, "Strong coffee", 0.05, "Coffee");
+        MenuItem latte = new Beverage("BM002", "Latte", 3.80, "Coffee with milk", 0.25, "Coffee");
+        MenuItem croissant = new Dish("DM001", "Croissant", 2.00, "Freshly baked croissant", "Flour, butter, sugar", "Pastry");
+        MenuItem sandwich = new Dish("DM002", "Chicken Sandwich", 5.50, "Hearty chicken sandwich", "Chicken, bread, lettuce, tomato", "Main");
 
-        // Пункт меню
-        MenuItem latte = new MenuItem("M001", "Лате", 55.0, "Кава");
+        admin.manageMenu(myCafe, espresso, "add");
+        admin.manageMenu(myCafe, latte, "add");
+        admin.manageMenu(myCafe, croissant, "add");
+        admin.manageMenu(myCafe, sandwich, "add");
 
-        // Платіж
-        Payment payment = new Payment("P001", 55.0, "Картка", "оплачено");
+        System.out.println("\n" + myCafe);
 
-        // Замовлення
-        CoffeeOrder order = new CoffeeOrder("ORD001", "10:30 01.06.2026", "готово");
+        // 3. Прийняття замовлення баристою
+        System.out.println("\n--- Processing Order 1 ---");
+        Order order1 = myCafe.createOrder(barista); // Замовлення прийнято баристою
+        barista.takeOrder(order1, espresso, 2);
+        barista.takeOrder(order1, croissant, 1);
+        System.out.println("After adding items: " + order1);
 
-        // Виведемо всі об'єкти
-        System.out.println(customer);
-        System.out.println(barista);
-        System.out.println(latte);
-        System.out.println(payment);
-        System.out.println(order);
+        // 4. Оновлення статусу замовлення
+        barista.updateOrderStatus(order1, OrderStatus.PREPARING);
+        barista.updateOrderStatus(order1, OrderStatus.READY_FOR_PICKUP);
 
-        // Перевірка equals
-        CoffeeOrder order2 = new CoffeeOrder("ORD001", "10:30", "готово");
-        System.out.println("Чи однакові замовлення? " + order.equals(order2));
+        // Спроба додати товар до замовленого, що готується (повинна бути помилка)
+        try {
+            barista.takeOrder(order1, latte, 1);
+        } catch (IllegalStateException e) {
+            System.out.println("Error adding item to preparing order: " + e.getMessage());
+        }
+
+        // 5. Оплата та завершення замовлення
+        myCafe.payOrder(order1);
+        myCafe.completeOrder(order1);
+        System.out.println("After payment and completion: " + order1);
+
+        // 6. Друге замовлення
+        System.out.println("\n--- Processing Order 2 ---");
+        Order order2 = myCafe.createOrder(barista);
+        barista.takeOrder(order2, latte, 1);
+        barista.takeOrder(order2, sandwich, 1);
+        System.out.println("Order 2: " + order2);
+        myCafe.processOrder(order2);
+        myCafe.completeOrder(order2);
+        System.out.println("Order 2 completed: " + order2);
+
+        System.out.println("\nFinal Cafe state: " + myCafe);
+        System.out.println("Active orders count: " + myCafe.getOrders().size()); // Якщо є геттер getOrders у Cafe
     }
 }

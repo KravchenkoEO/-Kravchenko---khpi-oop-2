@@ -1,42 +1,25 @@
-package ua.khpi.oop.lab01;
+// package ua.khpi.oop.lab02;
 
-import java.util.Objects;
-
-public class Barista {
-    private String baristaId;
-    private String name;
-    private int yearsOfExperience;
-
-    public Barista() {
-        this.baristaId = "unknown";
-        this.name = "unknown";
-        this.yearsOfExperience = 0;
+public class Barista extends User {
+    public Barista(String userId, String username, String password) {
+        super(userId, username, password);
     }
 
-    public Barista(String baristaId, String name, int yearsOfExperience) {
-        this.baristaId = baristaId;
-        this.name = name;
-        this.yearsOfExperience = yearsOfExperience;
+    public void takeOrder(Order order, MenuItem item, int quantity) {
+        // У реальності тут буде взаємодія з інтерфейсом для додавання позицій
+        order.addItem(item, quantity);
+        System.out.printf("Barista %s added %d of %s to order %s%n",
+                getUsername(), quantity, item.getName(), order.getOrderId());
     }
 
-    // геттери/сеттери (додай)
+    public void updateOrderStatus(Order order, OrderStatus newStatus) {
+        order.updateStatus(newStatus);
+        System.out.printf("Barista %s updated status of order %s to %s%n",
+                getUsername(), order.getOrderId(), newStatus);
+    }
 
     @Override
     public String toString() {
-        return String.format("Barista[ID=%s, name=%s, exp=%d years]",
-                baristaId, name, yearsOfExperience);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Barista)) return false;
-        Barista other = (Barista) obj;
-        return Objects.equals(baristaId, other.baristaId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(baristaId);
+        return String.format("Barista[id=%s, username=%s]", getUserId(), getUsername());
     }
 }

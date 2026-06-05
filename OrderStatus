@@ -1,0 +1,10 @@
+// package ua.khpi.oop.lab02;
+
+public enum OrderStatus {
+    PENDING,        // Очікує обробки
+    PREPARING,      // Готується
+    READY_FOR_PICKUP, // Готове до видачі
+    COMPLETED,      // Виконано (видано/віддано клієнту)
+    PAID,           // Оплачено
+    CANCELLED       // Скасовано
+}
