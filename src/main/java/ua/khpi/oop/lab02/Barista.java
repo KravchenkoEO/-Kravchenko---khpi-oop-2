@@ -1,20 +1,20 @@
-// package ua.khpi.oop.lab02;
+package ua.khpi.oop.lab02;
 
 public class Barista extends User {
+
     public Barista(String userId, String username, String password) {
         super(userId, username, password);
     }
 
     public void takeOrder(Order order, MenuItem item, int quantity) {
-        // У реальності тут буде взаємодія з інтерфейсом для додавання позицій
         order.addItem(item, quantity);
-        System.out.printf("Barista %s added %d of %s to order %s%n",
+        System.out.printf("Barista %s added %d x %s to order %s%n",
                 getUsername(), quantity, item.getName(), order.getOrderId());
     }
 
     public void updateOrderStatus(Order order, OrderStatus newStatus) {
         order.updateStatus(newStatus);
-        System.out.printf("Barista %s updated status of order %s to %s%n",
+        System.out.printf("Barista %s updated order %s to %s%n",
                 getUsername(), order.getOrderId(), newStatus);
     }
 

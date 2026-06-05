@@ -1,8 +1,8 @@
-// package ua.khpi.oop.lab02;
+package ua.khpi.oop.lab02;
 
 public class Dish extends MenuItem {
-    private String ingredients; // Список інгредієнтів
-    private String category; // Наприклад, "Сніданки", "Основні страви", "Десерти"
+    private String ingredients;
+    private String category;
 
     public Dish(String itemId, String name, double price, String description, String ingredients, String category) {
         super(itemId, name, price, description);
@@ -12,17 +12,8 @@ public class Dish extends MenuItem {
         this.category = category;
     }
 
-    // Getters and setters for ingredients, category
     public String getIngredients() { return ingredients; }
     public String getCategory() { return category; }
-    public void setIngredients(String ingredients) {
-        if (ingredients == null || ingredients.isEmpty()) throw new IllegalArgumentException("Ingredients cannot be null or empty.");
-        this.ingredients = ingredients;
-    }
-    public void setCategory(String category) {
-        if (category == null || category.isEmpty()) throw new IllegalArgumentException("Category cannot be null or empty.");
-        this.category = category;
-    }
 
     @Override
     public String toString() {

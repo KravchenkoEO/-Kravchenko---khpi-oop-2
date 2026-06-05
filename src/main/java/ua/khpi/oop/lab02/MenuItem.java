@@ -1,4 +1,4 @@
-// package ua.khpi.oop.lab02;
+package ua.khpi.oop.lab02;
 
 import java.util.Objects;
 
@@ -20,38 +20,30 @@ public abstract class MenuItem {
         this.available = true;
     }
 
-    // Getters and setters (for name, price, description, available status)
     public String getItemId() { return itemId; }
     public String getName() { return name; }
     public double getPrice() { return price; }
     public String getDescription() { return description; }
     public boolean isAvailable() { return available; }
-    public void setName(String name) {
-        if (name == null || name.isEmpty()) throw new IllegalArgumentException("Name cannot be null or empty.");
-        this.name = name;
-    }
+    public void setAvailable(boolean available) { this.available = available; }
     public void setPrice(double price) {
         if (price <= 0) throw new IllegalArgumentException("Price must be positive.");
         this.price = price;
-    }
-    public void setDescription(String description) { this.description = description; }
-    public void setAvailable(boolean available) { this.available = available; }
-
-    @Override
-    public String toString() {
-        return String.format("MenuItem[id=%s, name=%s, price=%.2f]", itemId, name, price);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MenuItem menuItem = (MenuItem) o;
-        return Objects.equals(itemId, menuItem.itemId);
+        MenuItem m = (MenuItem) o;
+        return Objects.equals(itemId, m.itemId);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(itemId);
+    public int hashCode() { return Objects.hash(itemId); }
+
+    @Override
+    public String toString() {
+        return String.format("MenuItem[id=%s, name=%s, price=%.2f]", itemId, name, price);
     }
 }
